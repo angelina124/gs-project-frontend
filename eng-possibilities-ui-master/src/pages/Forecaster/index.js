@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from "react";
-import retrieveHistoricalData from "../../utilities/forecast"
+import { retrieveHistoricalData, forecastFuture} from "../../utilities/forecast"
 import { ResponsiveLine } from '@nivo/line'
 
 const colors = ["hsl(176, 70%, 80%)", "hsl(380, 70%, 80%)", "hsl(25, 70%, 60%)", 
 "hsl(120, 70%, 80%)", "hsl(50, 70%, 70%)", "hsl(210, 70%, 80%)", 
-"hsl(300, 70%, 80%)", "hsl(290, 60%, 70%)"]
+"hsl(300, 70%, 80%)", "hsl(260, 60%, 80%)"]
 
 const MyResponsiveLine = ({ data }) => (
     <ResponsiveLine
@@ -21,7 +21,6 @@ const MyResponsiveLine = ({ data }) => (
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'category',
             legendOffset: 36,
             legendPosition: 'middle'
         }}
@@ -30,7 +29,6 @@ const MyResponsiveLine = ({ data }) => (
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'value',
             legendOffset: -40,
             legendPosition: 'middle'
         }}
@@ -71,6 +69,7 @@ const MyResponsiveLine = ({ data }) => (
 
 const ForecasterHome = () => {
   const [data, setData] = useState([])
+  const [forecastData, setForecastData] = useState([])
   const [error, setError] = React.useState(false)
   const [percentages, setPercentages] = React.useState([0,0,0,0,0,0,0,0])
   const [totalPercent, setTotalPercent] = React.useState(0)
@@ -86,9 +85,17 @@ const ForecasterHome = () => {
 
   const handleSubmit = e => {
     if(totalPercent === 100 && inputErrors.reduce((acc, p) => acc + p) === 0){
-
-    } else{
+      const requestData = {}
+      data.forEach((sectorData, i) => {
+        requestData[sectorData.category] = percentages[i]
+      })
+      forecastFuture(requestData).then((res) => {
+        console.log("res is " + JSON.stringify(res))
+        setForecastData([{...res}])
+      })
       
+    } else{
+      setFormError(true)
     }
   };
 
@@ -98,7 +105,7 @@ const ForecasterHome = () => {
       const temp = [...inputErrors]
       temp[i] = true
       setInputErrors(temp)
-    } else {
+    } else if (!isNaN(Number(percent))) {
         const percentagesTemp = percentages
         percentagesTemp[i] = Number(percent)
         setPercentages(percentagesTemp)
@@ -113,8 +120,7 @@ const ForecasterHome = () => {
   
   return (
     <>
-       <div style={{width: "100%", height: "100%"}}>
-          <h3>Investment Forecaster</h3>
+       <div style={{width: "100%", height: "100%", paddingBottom: 100}}>
           <div style={{display: "flex", flexDirection: "row", justifyContent: "space-evenly"}}>
             <div style={{width: "15%", justifyContent: "space-between", marginTop: 50}}>
                 <h3 style={{color: "hsl(210, 70%, 50%)", marginBottom: 20}}>Total: {totalPercent}%</h3>
@@ -147,11 +153,11 @@ const ForecasterHome = () => {
                   <button style={
                     {
                       width: "100%", 
-                      backgroundColor: "hsl(100, 70%, 40%)", 
-                      color: "white", 
+                      backgroundColor: "hsl(100, 70%, 80%)", 
+                      color: "black", 
                       borderRadius: 10, 
                       borderStyle: "solid", 
-                      borderColor:  "hsl(100, 70%, 30%)"
+                      borderColor:  "hsl(100, 70%, 70%)"
                     }} 
                     type="button"
                     onClick={handleSubmit}
@@ -169,7 +175,7 @@ const ForecasterHome = () => {
 
                 <div style={{height: 350}}>
                   <h4 style={{color: "hsl(210, 70%, 50%)"}}> Forecasted Data</h4>
-                  <MyResponsiveLine data={data}/>
+                  <MyResponsiveLine data={forecastData}/>
                 </div>
               </div>
             </div>
