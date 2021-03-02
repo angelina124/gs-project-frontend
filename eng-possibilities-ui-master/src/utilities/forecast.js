@@ -22,13 +22,41 @@ const retrieveHistoricalData = () => {
     })
 }
 
+const categories = ["Energy", "Technology", "Financial Services", "Real Estate", "Pharmaceuticals", "Airline", "Retail", "Gaming"]
+
 const forecastFuture = (data) => {
     return axios.post(`${API_URL}${forecastPath}`, data)
         .then((res) => {
-            console.log(res)
-            const data = res.data.response.map
-                ((y, i) => ({x: `${i}`, y}))
-            return {...res, data, id: "forecast", color: colors[0]}
+
+            const data = categories.map((cat, j) => ({
+                data: res.data.response[cat].map((y, i) => ({x: `${i}`, y})),
+                id: cat,
+                color: colors[j]
+            })) 
+
+            const initialV = [
+                {x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}, 
+                {x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0},
+                {x: 0, y: 0}, {x: 0, y: 0}
+            ]
+
+            const consolidatedData = {
+                id: "Total",
+                data: categories.reduce((arr, cat) => {
+                    const arrTemp = [...arr]
+
+
+                    res.data.response[cat].forEach(
+                        (y, j) => {
+                            arrTemp[j] = {x: j, y: arrTemp[j].y + y}
+                        }
+                    )
+    
+                    return arrTemp
+                }, initialV)
+            }
+
+            return { ...res, data, consolidatedData } 
         })
 }
 
