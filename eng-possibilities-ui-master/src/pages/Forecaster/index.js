@@ -10,7 +10,7 @@ const MyResponsiveLine = ({ data }) => (
     <ResponsiveLine
         data={data}
         colors={colors}
-        margin={{ top: 50, right: 110, bottom: 50, left: 100 }}
+        margin={{ top: 10, right: 110, bottom: 50, left: 100 }}
         xScale={{ type: 'point' }}
         yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
         yFormat=" >-.2f"
@@ -125,7 +125,7 @@ const ForecasterHome = () => {
   
   return (
     <>
-       <div style={{width: "100%", height: "100%", paddingBottom: 100, paddingTop: 50}}>
+       <div style={{width: "100%", height: "100%", paddingBottom: 100, paddingTop: 20}}>
           <div style={{display: "flex", flexDirection: "row", justifyContent: "space-evenly"}}>
             <div style={{width: "15%", justifyContent: "space-between", marginTop: 20}}>
                 <h3 style={{color: "hsl(210, 70%, 50%)", marginBottom: 20}}>Total: {totalPercent}%</h3>
@@ -146,7 +146,8 @@ const ForecasterHome = () => {
                                       borderColor: sectorData.color,
                                       borderRadius: 2
                                     }}
-                                    onChange={((e) => onPercentageChange(e.target.value, i))}
+                                  onBlur={((e) => onPercentageChange(e.target.value, i))}
+                                  placeholder={0}
                                   />
                             </div>  
                           {inputErrors[i] === true ? <p style={{color: "red", fontSize: 12}}>Invalid percentage. Percentage must at least {sectorData.minimum}.</p> : <p/>}
@@ -172,8 +173,8 @@ const ForecasterHome = () => {
                 </form>
                 {totalPercent !== 100 ? <p style={{color: "red", fontSize: 12, paddingTop: 5}}>Invalid distribution. Percentages must sum to 100%</p> : <p/>}
               </div>
-              <div style={{display: "flex", flexDirection: "column", width: "70%", justifyContent: "space-between"}}>
-                <div style={{height: 350, marginBottom: 50, width: "100%"}}>
+              <div style={{display: "flex", flexDirection: "column", width: "65%", justifyContent: "space-between"}}>
+                <div style={{height: 300, marginBottom: 50, width: "100%"}}>
                   <h4 style={{color: "hsl(210, 70%, 50%)"}}>Historical Data</h4>
                   <MyResponsiveLine data={data}/>
                 </div>
@@ -182,7 +183,7 @@ const ForecasterHome = () => {
                   <h4 style={{color: "hsl(210, 70%, 50%)"}}> Forecasted Data</h4>
                   { forecastData.length !== 0 ?
                     (
-                      <div style={{height: 350, width: "100%"}}>
+                      <div style={{height: 300, width: "100%"}}>
                         <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                           <p style={{color: "hsl(210, 70%, 70%)", paddingRight: 12}}> Consolidate Forecast</p>
                           <input style={{marginBottom: 12}} type="checkbox" onClick={() => setShouldConsolidate(!shouldConsolidate)}/>
@@ -194,9 +195,6 @@ const ForecasterHome = () => {
                       <p style={{color: "hsl(210, 70%, 70%)", paddingRight: 12, fontSize: 14}}>Enter percentages in order to see your forecast here.</p>
                     )
                   } 
-                  
-                  
-                  
                 </div>
               </div>
             </div>

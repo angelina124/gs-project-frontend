@@ -12,7 +12,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory (eng-possibilities-ui-master), you can run:
 
 ### `npm start`
 
@@ -31,6 +31,11 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Additional Libraries
+We added the [Nivo](https://nivo.rocks/) data visualization library to create the graphs because
+based on online reviews and documentation it appeared to be both powerful and 
+visually pleasing.
 
 ## Learn More
 
